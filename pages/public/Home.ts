@@ -1,6 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 
-export class LandingPage {
+export class HomePage {
   readonly page: Page;
   readonly headerNav: Locator;
   readonly cookiesDialog: Locator;
