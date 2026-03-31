@@ -6,10 +6,10 @@ test.describe('Login Page Tests', () => {
 
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
+    await loginPage.openLoginPage();
   });
 
   test('should login into the account', async () => {
-    await loginPage.openLoginPage();
     await loginPage.login();
     await loginPage.isUserLoggedIn();
   });
