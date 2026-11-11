@@ -4,11 +4,35 @@ export class HomePage {
   readonly page: Page;
   readonly headerNav: Locator;
   readonly cookiesDialog: Locator;
+  readonly platformButton: Locator;
+  readonly solutionsButton: Locator;
+  readonly resourcesButton: Locator;
+  readonly pricingLink: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.headerNav = page.getByRole('navigation');
     this.cookiesDialog = page.getByRole('dialog', { name: 'Privacy Settings' });
+
+    this.platformButton = this.headerNav.getByRole('button', {
+      name: 'Platform',
+      exact: true,
+    });
+
+    this.solutionsButton = this.headerNav.getByRole('button', {
+      name: 'Solutions',
+      exact: true,
+    });
+
+    this.resourcesButton = this.headerNav.getByRole('button', {
+      name: 'Resources',
+      exact: true,
+    });
+
+    this.pricingLink = this.headerNav.getByRole('link', {
+      name: 'Pricing',
+      exact: true,
+    });
   }
 
   async gotoBaseURL() {
@@ -16,11 +40,10 @@ export class HomePage {
   }
 
   async expectHeaderLinksVisible() {
-    await expect(this.headerNav.getByRole('link', { name: 'AI Testing' })).toBeVisible();
-    await expect(this.headerNav.getByText('Resources', { exact: true })).toBeVisible();
-    await expect(this.headerNav.getByRole('link', { name: 'Platform' })).toBeVisible();
-    await expect(this.headerNav.getByRole('link', { name: 'Enterprise' })).toBeVisible();
-    await expect(this.headerNav.getByRole('link', { name: 'Pricing' })).toBeVisible();
+    await expect(this.platformButton).toBeVisible();
+    await expect(this.solutionsButton).toBeVisible();
+    await expect(this.resourcesButton).toBeVisible();
+    await expect(this.pricingLink).toBeVisible();
   }
 
   async acceptCookies() {
@@ -28,10 +51,10 @@ export class HomePage {
   }
 
   async expectCookiesDialogVisible() {
-    await expect(this.cookiesDialog.getByText('Privacy Settings This site uses third-party website')).toBeVisible();
+    await expect(this.cookiesDialog.getByText('This site uses third-party website tracking technologies')).toBeVisible();
   }
 
   async expectCookiesDialogHidden() {
-    await expect(this.cookiesDialog.getByText('Privacy Settings This site uses third-party website')).toBeHidden();
+    await expect(this.cookiesDialog.getByText('This site uses third-party website tracking technologies')).toBeHidden();
   }
 }

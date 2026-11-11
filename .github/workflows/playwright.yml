@@ -1,9 +1,17 @@
 name: Playwright Tests
 on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+  # schedule:
+  #   - cron: '00 23 * * *'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to run tests on'
+        required: true
+        default: 'qa'
+  # push:
+  #   branches: [ main, master ]
+  # pull_request:
+  #   branches: [ main, master ]
 jobs:
   test:
     timeout-minutes: 60
@@ -17,8 +25,25 @@ jobs:
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+
+    - name: Config Runsettings
+      id: set-runsettings
+      shell: pwsh
+      run: |
+        if ("${{ github.event.inputs.environment }}" -eq "qa" -or "${{ github.event_name }}" -ne "workflow_dispatch") {
+          $content = Get-Content -Path qa.env -Raw
+          $content = $content -replace "#replace_qa_email#", "${{ secrets.QASE_EMAIL }}"
+          $content = $content -replace "#replace_qa_password#", "${{ secrets.QASE_PASSWORD }}"
+          $content = $content -replace "#replace_qa_token#", "${{ secrets.QASE_API_TOKEN }}"
+          Set-Content -Path qa.env -Value $content
+          echo "ENV_FILE=qa.env" | Out-File -FilePath .env -Encoding utf8
+          echo "runsettings=${env:GITHUB_WORKSPACE}/qa.env" >> $env:GITHUB_OUTPUT
+        }
+
     - name: Run Playwright tests
       run: npx playwright test
+      env:
+        ENV_FILE: qa.env
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
