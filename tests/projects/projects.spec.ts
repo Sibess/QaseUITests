@@ -33,7 +33,7 @@ test.describe('Projects Page Tests', () => {
   });
 
   test('should create a new project', async ({ page, request }) => {
-test.setTimeout(60_000);
+
 
     const projectName = `Auto Test Project ${Date.now()}`;
     const projectCode = `TEST${Date.now().toString().slice(-6)}`;
