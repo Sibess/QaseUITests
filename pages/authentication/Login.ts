@@ -17,11 +17,17 @@ export class LoginPage {
       .first();
   }
 
-  async openLoginPage() {
-    await this.page.goto(process.env.QASE_BASE_URL!);
-    await this.page.getByRole('button', { name: 'Accept' }).click();
-    await this.page.getByRole('link', { name: 'Login' }).click();
+async openLoginPage() {
+  await this.page.goto(process.env.QASE_BASE_URL!);
+
+  const acceptButton = this.page.getByRole('button', { name: 'Accept' });
+
+  if (await acceptButton.isVisible({ timeout: 5000 })) {
+    await acceptButton.click();
   }
+
+  await this.page.getByRole('link', { name: 'Login' }).click();
+}
 
   async login() {
     await this.emailInput.fill(process.env.QASE_EMAIL!);
