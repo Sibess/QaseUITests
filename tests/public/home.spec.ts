@@ -14,7 +14,7 @@ test.describe('Home Page Tests', () => {
   });
 
 test('should accept cookies dialog', async ({ page }) => {
-  test.skip(process.env.CI, 'Cookie dialog is not rendered in GitHub Actions');
+  test.skip(process.env.CI, 'Cookie dialog is not rendered when run via GitHub');
 
   await homePage.expectCookiesDialogVisible();
   await homePage.acceptCookies();
