@@ -2,9 +2,9 @@ import { test, expect } from '@playwright/test';
 import { LoginPage } from '../../pages/authentication/Login';
 import { ProjectsPage } from '../../pages/projects/Projects';
 import { ProjectPage } from '../../pages/project/Project';
-import { SuiteApi } from '../../pages/api/SuiteApi';
-import { ProjectApi } from '../../pages/api/ProjectApi';
-import { CaseApi } from '../../pages/api/CaseApi';
+import { SuiteApi } from '../../api/SuiteApi';
+import { ProjectApi } from '../../api/ProjectApi';
+import { CaseApi } from '../../api/CaseApi';
 
 test.describe('Projects Page Tests', () => {
   test.describe.configure({ mode: 'serial' });
@@ -33,7 +33,6 @@ test.describe('Projects Page Tests', () => {
   });
 
   test('should create a new project', async ({ page, request }) => {
-
 
     const projectName = `Auto Test Project ${Date.now()}`;
     const projectCode = `TEST${Date.now().toString().slice(-6)}`;
