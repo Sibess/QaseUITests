@@ -23,29 +23,31 @@ export class SuiteApi {
     return response.json();
   }
 
-  async verifySuiteCreated(
-    request: APIRequestContext,
-    projectCode: string,
-    suiteName: string,
-  ) {
-    const response = await request.get(
-      `${process.env.QASE_API_URL!}/suite/${projectCode}`,
-      {
-        headers: {
-          Token: process.env.QASE_API_TOKEN!,
-          accept: 'application/json',
+async verifySuiteCreated(
+  request: APIRequestContext,
+  projectCode: string,
+  suiteName: string,
+) {
+  await expect
+    .poll(async () => {
+      const response = await request.get(
+        `${process.env.QASE_API_URL!}/suite/${projectCode}`,
+        {
+          headers: {
+            Token: process.env.QASE_API_TOKEN!,
+            accept: 'application/json',
+          },
         },
-      },
-    );
+      );
 
-    expect(response.status()).toBe(200);
+      expect(response.status()).toBe(200);
 
-    const body = await response.json();
+      const body = await response.json();
 
-    const suite = body.result.entities.find(
-      (item: any) => item.title === suiteName,
-    );
-
-    expect(suite).toBeTruthy();
-  }
+      return body.result.entities.find(
+        (item: any) => item.title === suiteName,
+      );
+    })
+    .toBeTruthy();
+}
 }
