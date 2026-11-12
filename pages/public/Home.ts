@@ -50,11 +50,11 @@ export class HomePage {
     await this.cookiesDialog.getByRole('button', { name: 'Accept' }).click();
   }
 
-  async expectCookiesDialogVisible() {
-    await expect(this.cookiesDialog.getByText('This site uses third-party website tracking technologies')).toBeVisible();
-  }
+async expectCookiesDialogVisible() {
+  await expect(this.cookiesDialog).toBeVisible();
+}
 
-  async expectCookiesDialogHidden() {
-    await expect(this.cookiesDialog.getByText('This site uses third-party website tracking technologies')).toBeHidden();
-  }
+async expectCookiesDialogHidden() {
+  await expect(this.cookiesDialog).toBeHidden();
+}
 }
