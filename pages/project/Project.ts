@@ -62,21 +62,21 @@ export class ProjectPage {
       .click();
   }
 
-private async selectRequiredDropdowns() {
-  await this.page.getByRole('combobox').nth(3).click();
-  await this.page.getByRole('option', { name: 'Medium' }).first().click();
+  private async selectRequiredDropdowns() {
+    await this.page.getByRole('combobox').nth(3).click();
+    await this.page.getByRole('option', { name: 'Medium' }).first().click();
 
-  await this.page.getByRole('combobox').nth(4).click();
-  await this.page.getByRole('option', { name: 'Functional' }).first().click();
+    await this.page.getByRole('combobox').nth(4).click();
+    await this.page.getByRole('option', { name: 'Functional' }).first().click();
 
-  await this.page.getByRole('combobox').nth(5).click();
-  await this.page.getByRole('option', { name: 'Unit' }).first().click();
+    await this.page.getByRole('combobox').nth(5).click();
+    await this.page.getByRole('option', { name: 'Unit' }).first().click();
 
-  await this.page.getByRole('combobox').nth(8).click();
-  await this.page.getByRole('option', { name: 'Positive' }).first().click();
-}
+    await this.page.getByRole('combobox').nth(8).click();
+    await this.page.getByRole('option', { name: 'Positive' }).first().click();
+  }
 
-    private async uploadAttachment() {
+  private async uploadAttachment() {
     await this.page
       .getByRole('article')
       .filter({
@@ -101,7 +101,7 @@ private async selectRequiredDropdowns() {
     await expect(dialog).not.toBeVisible();
   }
 
-    private async addSteps() {
+  private async addSteps() {
     const steps = [
       { action: 'Open project', expected: 'Project is opened' },
       { action: 'Click Manual test', expected: 'Create page is displayed' },
