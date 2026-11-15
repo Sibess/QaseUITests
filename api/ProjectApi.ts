@@ -1,4 +1,5 @@
 import { APIRequestContext, expect } from '@playwright/test';
+import { API_URL, getHeaders } from './ApiHelper';
 
 export class ProjectApi {
   async createProject(
@@ -6,46 +7,29 @@ export class ProjectApi {
     projectName: string,
     projectCode: string
   ) {
-    const response = await request.post(
-      `${process.env.QASE_API_URL!}/project`,
-      {
-        headers: {
-          accept: 'application/json',
-          'content-type': 'application/json',
-          Token: process.env.QASE_API_TOKEN!,
-        },
-        data: {
-          title: projectName,
-          code: projectCode,
-        },
-      }
-    );
+    const response = await request.post(`${API_URL}/project`, {
+      headers: getHeaders(),
+      data: {
+        title: projectName,
+        code: projectCode,
+      },
+    });
 
     expect(response.status()).toBe(200);
   }
 
   async deleteProject(request: APIRequestContext, projectCode: string) {
-    const response = await request.delete(
-      `${process.env.QASE_API_URL!}/project/${projectCode}`,
-      {
-        headers: {
-          Token: process.env.QASE_API_TOKEN!,
-        },
-      }
-    );
+    const response = await request.delete(`${API_URL}/project/${projectCode}`, {
+      headers: getHeaders(),
+    });
 
     expect(response.status()).toBe(200);
   }
 
   async getAllProjects(request: APIRequestContext) {
-    const response = await request.get(
-      `${process.env.QASE_API_URL!}/project`,
-      {
-        headers: {
-          Token: process.env.QASE_API_TOKEN!,
-        },
-      }
-    );
+    const response = await request.get(`${API_URL}/project`, {
+      headers: getHeaders(),
+    });
 
     expect(response.status()).toBe(200);
 

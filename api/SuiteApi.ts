@@ -1,4 +1,5 @@
 import { APIRequestContext, expect } from '@playwright/test';
+import { API_URL, getHeaders } from './ApiHelper';
 
 export class SuiteApi {
   async createSuite(
@@ -6,48 +7,36 @@ export class SuiteApi {
     projectCode: string,
     suiteName: string,
   ) {
-    const response = await request.post(
-      `${process.env.QASE_API_URL!}/suite/${projectCode}`,
-      {
-        headers: {
-          Token: process.env.QASE_API_TOKEN!,
-          'Content-Type': 'application/json',
-        },
-        data: {
-          title: suiteName,
-        },
+    const response = await request.post(`${API_URL}/suite/${projectCode}`, {
+      headers: getHeaders(),
+      data: {
+        title: suiteName,
       },
-    );
+    });
 
     expect(response.ok()).toBeTruthy();
     return response.json();
   }
 
-async verifySuiteCreated(
-  request: APIRequestContext,
-  projectCode: string,
-  suiteName: string,
-) {
-  await expect
-    .poll(async () => {
-      const response = await request.get(
-        `${process.env.QASE_API_URL!}/suite/${projectCode}`,
-        {
-          headers: {
-            Token: process.env.QASE_API_TOKEN!,
-            accept: 'application/json',
-          },
-        },
-      );
+  async verifySuiteCreated(
+    request: APIRequestContext,
+    projectCode: string,
+    suiteName: string,
+  ) {
+    await expect
+      .poll(async () => {
+        const response = await request.get(`${API_URL}/suite/${projectCode}`, {
+          headers: getHeaders(),
+        });
 
-      expect(response.status()).toBe(200);
+        expect(response.status()).toBe(200);
 
-      const body = await response.json();
+        const body = await response.json();
 
-      return body.result.entities.find(
-        (item: any) => item.title === suiteName,
-      );
-    })
-    .toBeTruthy();
-}
+        return body.result.entities.find(
+          (item: any) => item.title === suiteName,
+        );
+      })
+      .toBeTruthy();
+  }
 }
