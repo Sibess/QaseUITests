@@ -76,15 +76,7 @@ export class ProjectPage {
     await this.page.getByRole('option', { name: 'Positive' }).click();
   }
 
-  private async addSteps() {
-    await this.newStepButton.click();
-
-    await this.page.locator('[data-placeholder="Step action"]').click();
-    await this.page.keyboard.type('Open project');
-
-    await this.page.locator('[data-placeholder="Expected result"]').click();
-    await this.page.keyboard.type('Project is opened');
-
+    private async uploadAttachment() {
     await this.page
       .getByRole('article')
       .filter({
@@ -97,7 +89,6 @@ export class ProjectPage {
       .click();
 
     const dialog = this.page.getByRole('dialog');
-
     const fileChooserPromise = this.page.waitForEvent('filechooser');
 
     await dialog
@@ -108,54 +99,32 @@ export class ProjectPage {
     await fileChooser.setFiles('tests/test-data/attachment.txt');
 
     await expect(dialog).not.toBeVisible();
+  }
 
-    await this.newStepButton.click();
+    private async addSteps() {
+    const steps = [
+      { action: 'Open project', expected: 'Project is opened' },
+      { action: 'Click Manual test', expected: 'Create page is displayed' },
+      { action: 'Enter title', expected: 'Title is entered' },
+      { action: 'Select status', expected: 'Status is selected' },
+      { action: 'Select priority', expected: 'Priority is selected' },
+      { action: 'Fill steps', expected: 'Steps are added' },
+      { action: 'Save test case', expected: 'Test case is created' },
+    ];
 
-    await this.page.locator('[data-placeholder="Step action"]').nth(1).click();
-    await this.page.keyboard.type('Click Manual test');
+    for (let i = 0; i < steps.length; i++) {
+      await this.newStepButton.click();
 
-    await this.page.locator('[data-placeholder="Expected result"]').nth(1).click();
-    await this.page.keyboard.type('Create page is displayed');
+      await this.page.locator('[data-placeholder="Step action"]').nth(i).click();
+      await this.page.keyboard.type(steps[i].action);
 
-    await this.newStepButton.click();
+      await this.page.locator('[data-placeholder="Expected result"]').nth(i).click();
+      await this.page.keyboard.type(steps[i].expected);
 
-    await this.page.locator('[data-placeholder="Step action"]').nth(2).click();
-    await this.page.keyboard.type('Enter title');
-
-    await this.page.locator('[data-placeholder="Expected result"]').nth(2).click();
-    await this.page.keyboard.type('Title is entered');
-
-    await this.newStepButton.click();
-
-    await this.page.locator('[data-placeholder="Step action"]').nth(3).click();
-    await this.page.keyboard.type('Select status');
-
-    await this.page.locator('[data-placeholder="Expected result"]').nth(3).click();
-    await this.page.keyboard.type('Status is selected');
-
-    await this.newStepButton.click();
-
-    await this.page.locator('[data-placeholder="Step action"]').nth(4).click();
-    await this.page.keyboard.type('Select priority');
-
-    await this.page.locator('[data-placeholder="Expected result"]').nth(4).click();
-    await this.page.keyboard.type('Priority is selected');
-
-    await this.newStepButton.click();
-
-    await this.page.locator('[data-placeholder="Step action"]').nth(5).click();
-    await this.page.keyboard.type('Fill steps');
-
-    await this.page.locator('[data-placeholder="Expected result"]').nth(5).click();
-    await this.page.keyboard.type('Steps are added');
-
-    await this.newStepButton.click();
-
-    await this.page.locator('[data-placeholder="Step action"]').nth(6).click();
-    await this.page.keyboard.type('Save test case');
-
-    await this.page.locator('[data-placeholder="Expected result"]').nth(6).click();
-    await this.page.keyboard.type('Test case is created');
+      if (i === 0) {
+        await this.uploadAttachment();
+      }
+    }
   }
 
   async createTestCase(title: string) {
