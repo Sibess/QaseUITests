@@ -105,7 +105,7 @@ export class ProjectPage {
       .click();
 
     const fileChooser = await fileChooserPromise;
-    await fileChooser.setFiles('tests/fixtures/attachment.txt');
+    await fileChooser.setFiles('tests/test-data/attachment.txt');
 
     await expect(dialog).not.toBeVisible();
 
