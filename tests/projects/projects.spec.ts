@@ -17,7 +17,6 @@ test.describe('Projects Page Tests', () => {
   let caseApi: CaseApi;
 
   test.beforeEach(async ({ page, request }) => {
-    await page.reload();
     projectApi = new ProjectApi();
 
     await projectApi.deleteAllProjects(request);
