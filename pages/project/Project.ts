@@ -64,16 +64,16 @@ export class ProjectPage {
 
   private async selectRequiredDropdowns() {
     await this.page.getByRole('combobox').nth(3).click();
-    await this.page.getByRole('option', { name: 'Medium' }).first().click();
+    await this.page.getByRole('option', { name: 'Medium' }).click();
 
     await this.page.getByRole('combobox').nth(4).click();
-    await this.page.getByRole('option', { name: 'Functional' }).first().click();
+    await this.page.getByRole('option', { name: 'Functional' }).click();
 
     await this.page.getByRole('combobox').nth(5).click();
-    await this.page.getByRole('option', { name: 'Unit' }).first().click();
+    await this.page.getByRole('option', { name: 'Unit' }).click();
 
     await this.page.getByRole('combobox').nth(8).click();
-    await this.page.getByRole('option', { name: 'Positive' }).first().click();
+    await this.page.getByRole('option', { name: 'Positive' }).click();
   }
 
   private async uploadAttachment() {
