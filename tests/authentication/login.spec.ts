@@ -1,20 +1,20 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../../pages/authentication/Login';
-import { ProjectsPage } from '../../pages/projects/Projects';
+import { LoginPage } from '../../pages/authentication/LoginPage';
+import { ProjectsListPage } from '../../pages/projects/ProjectsListPage';
 
 test.describe('Login Page Tests', () => {
   let loginPage: LoginPage;
-  let projectsPage: ProjectsPage;
+  let projectsListPage: ProjectsListPage;
 
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
-    projectsPage = new ProjectsPage(page);
+    projectsListPage = new ProjectsListPage(page);
     await loginPage.openLoginPage();
   });
 
   test('should login into the account', async () => {
     await loginPage.login();
-    await projectsPage.isUserLoggedIn();
+    await projectsListPage.isUserLoggedIn();
   });
 
   test('should not login with invalid credentials', async ({ page }) => {

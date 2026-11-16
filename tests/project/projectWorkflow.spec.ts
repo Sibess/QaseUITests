@@ -1,17 +1,19 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../../pages/authentication/Login';
-import { ProjectsPage } from '../../pages/projects/Projects';
-import { ProjectPage } from '../../pages/project/Project';
+import { LoginPage } from '../../pages/authentication/LoginPage';
+import { ProjectsListPage } from '../../pages/projects/ProjectsListPage';
+import { ProjectDetailsPage } from '../../pages/project/ProjectDetailsPage';
+import { CaseCreatePage } from '../../pages/case/CaseCreatePage';
 import { SuiteApi } from '../../api/SuiteApi';
 import { ProjectApi } from '../../api/ProjectApi';
 import { CaseApi } from '../../api/CaseApi';
 
-test.describe('Projects Page Tests', () => {
+test.describe('Project Workflow Tests', () => {
   test.describe.configure({ mode: 'serial' });
 
   let loginPage: LoginPage;
-  let projectsPage: ProjectsPage;
-  let projectPage: ProjectPage;
+  let projectsListPage: ProjectsListPage;
+  let projectDetailsPage: ProjectDetailsPage;
+  let caseCreatePage: CaseCreatePage;
   let suiteApi: SuiteApi;
   let projectApi: ProjectApi;
   let caseApi: CaseApi;
@@ -22,8 +24,9 @@ test.describe('Projects Page Tests', () => {
     await projectApi.deleteAllProjects(request);
 
     loginPage = new LoginPage(page);
-    projectsPage = new ProjectsPage(page);
-    projectPage = new ProjectPage(page);
+    projectsListPage = new ProjectsListPage(page);
+    projectDetailsPage = new ProjectDetailsPage(page);
+    caseCreatePage = new CaseCreatePage(page);
     suiteApi = new SuiteApi();
     caseApi = new CaseApi();
 
@@ -36,11 +39,11 @@ test.describe('Projects Page Tests', () => {
     const projectName = `Auto Test Project ${Date.now()}`;
     const projectCode = `TEST${Date.now().toString().slice(-6)}`;
 
-    await projectsPage.clickCreateNewProject();
-    await projectsPage.fillProjectName(projectName);
-    await projectsPage.fillProjectCode(projectCode);
-    await projectsPage.createNewProject();
-    await projectsPage.isProjectCreated(projectCode);
+    await projectsListPage.clickCreateNewProject();
+    await projectsListPage.fillProjectName(projectName);
+    await projectsListPage.fillProjectCode(projectCode);
+    await projectsListPage.createNewProject();
+    await projectsListPage.isProjectCreated(projectCode);
     await projectApi.deleteProject(request, projectCode);
   });
 
@@ -52,9 +55,9 @@ test.describe('Projects Page Tests', () => {
 
     await projectApi.createProject(request, projectName, projectCode);
 
-    await projectsPage.openProject(projectName);
+    await projectsListPage.openProject(projectName);
 
-    await projectPage.createSuite(suiteName);
+    await projectDetailsPage.createSuite(suiteName);
     await suiteApi.verifySuiteCreated(request, projectCode, suiteName);
 
     await projectApi.deleteProject(request, projectCode);
@@ -69,15 +72,19 @@ test.describe('Projects Page Tests', () => {
 
     await projectApi.createProject(request, projectName, projectCode);
     await suiteApi.createSuite(request, projectCode, suiteName);
-    await projectsPage.openProject(projectName);
+    await projectsListPage.openProject(projectName);
+
     const caseLoadResponsePromise = page.waitForResponse((response) =>
       new URL(response.url()).pathname === '/v2/case/load'
     );
-    await projectPage.createTestCase(testCaseTitle);
+
+    await projectDetailsPage.clickManualTestButton();
+    await caseCreatePage.createTestCase(testCaseTitle);
+
     const response = await caseLoadResponsePromise;
     await caseApi.expectTestCaseCreatedViaApi(testCaseTitle, response);
 
-    await projectPage.expectTestCaseCreatedViaUI(testCaseTitle);
+    await projectDetailsPage.expectTestCaseCreatedViaUI(testCaseTitle);
 
     await projectApi.deleteProject(request, projectCode);
   });
