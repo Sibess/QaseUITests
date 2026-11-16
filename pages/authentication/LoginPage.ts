@@ -22,7 +22,7 @@ async openLoginPage() {
 
   const acceptButton = this.page.getByRole('button', { name: 'Accept' });
 
-  if (await acceptButton.isVisible({ timeout: 5000 })) {
+  if (await acceptButton.isVisible()) {
     await acceptButton.click();
   }
 
